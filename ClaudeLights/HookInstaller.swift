@@ -157,7 +157,13 @@ final class HookInstaller: ObservableObject {
         }
         if hasLegacy { return .legacyShellHooks }
 
-        if !ourCommands.allSatisfy({ $0.contains(installedHelperURL.path) }) {
+        // Manual wiring per settings.snippet.json uses "$HOME/..."; the shell
+        // expands it to the same helper, so treat it as the correct path.
+        let homeRelativePath = installedHelperURL.path
+            .replacingOccurrences(of: NSHomeDirectory(), with: "$HOME")
+        if !ourCommands.allSatisfy({
+            $0.contains(installedHelperURL.path) || $0.contains(homeRelativePath)
+        }) {
             return .needsRepair(.wrongPath)
         }
         if wiredEvents != Set(Self.wirings.map(\.event)) {
