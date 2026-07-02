@@ -56,7 +56,35 @@ check("arbitrary bundleId alone -> nil",
 check("allowlist accepts terminals", FocusSupport.isAllowedHost("com.mitchellh.ghostty"))
 check("allowlist accepts JetBrains prefix", FocusSupport.isAllowedHost("com.jetbrains.pycharm.ce"))
 check("allowlist accepts Xcode", FocusSupport.isAllowedHost("com.apple.dt.Xcode"))
+check("allowlist accepts VS Code forks", FocusSupport.isAllowedHost("com.google.antigravity")
+      && FocusSupport.isAllowedHost("com.exafunction.windsurf"))
 check("allowlist rejects others", !FocusSupport.isAllowedHost("com.apple.Safari"))
+
+// --- titleMatchCandidates ------------------------------------------------------
+let home = NSHomeDirectory()
+check("candidates deepest first, home prefix + stopwords dropped",
+      FocusSupport.titleMatchCandidates(forCwd: "\(home)/projects/frontend/src") == ["frontend"])
+check("home prefix dropped positionally, project named like username kept",
+      FocusSupport.titleMatchCandidates(forCwd: "\(home)/repos/\((home as NSString).lastPathComponent)")
+          == [(home as NSString).lastPathComponent])
+check("short components filtered",
+      FocusSupport.titleMatchCandidates(forCwd: "/data/ab/x") == ["data"])
+check("home itself yields nothing", FocusSupport.titleMatchCandidates(forCwd: home).isEmpty)
+check("candidates capped at 3",
+      FocusSupport.titleMatchCandidates(forCwd: "/aaa/bbb/ccc/ddd/eee/fff").count == 3)
+
+// --- titleMatches (whole word) ---------------------------------------------------
+check("whole-word match", FocusSupport.titleMatches("frontend — index.ts", candidate: "frontend"))
+check("case-insensitive", FocusSupport.titleMatches("Frontend – main", candidate: "frontend"))
+check("no substring match", !FocusSupport.titleMatches("frontend-v2 — x", candidate: "frontend"))
+check("regex metachars escaped", FocusSupport.titleMatches("my (app) — x", candidate: "(app)"))
+
+// --- isWindowTitleHost ------------------------------------------------------------
+check("windowtitle host: IDEs yes", FocusSupport.isWindowTitleHost("com.jetbrains.WebStorm")
+      && FocusSupport.isWindowTitleHost("com.google.antigravity")
+      && FocusSupport.isWindowTitleHost("com.apple.dt.Xcode"))
+check("windowtitle host: terminals no", !FocusSupport.isWindowTitleHost("com.googlecode.iterm2")
+      && !FocusSupport.isWindowTitleHost("com.mitchellh.ghostty"))
 
 // --- strategy fall-through on invalid/missing fields --------------------------------
 check("tmux: no pane -> false", !TmuxFocusStrategy().attempt(session(term: "tmux")))
@@ -78,6 +106,18 @@ check("workspace: editor not running -> false",
 check("fallback: unknown host -> false", !AppActivationFallbackStrategy().attempt(session(term: "mystery")))
 check("fallback: spoofed bundleId not activated",
       !AppActivationFallbackStrategy().attempt(session(bundleId: "com.apple.Calculator")))
+// Window-title strategy: only paths that bail before the Accessibility trust
+// check (a headless test run must never trigger the system prompt) — the
+// fixtures use com.vscodium, which is not installed on dev machines, and
+// terminal hosts, which the strategy refuses outright.
+check("windowtitle: unknown host -> false",
+      !WindowTitleFocusStrategy().attempt(session(term: "mystery", cwd: "/data/projects/x")))
+check("windowtitle: terminal host refused",
+      !WindowTitleFocusStrategy().attempt(session(term: "iTerm.app", cwd: "/data/projects/x")))
+check("windowtitle: app not running -> false",
+      !WindowTitleFocusStrategy().attempt(session(term: "vscode", cwd: "/tmp", bundleId: "com.vscodium")))
+check("windowtitle: no cwd -> false",
+      !WindowTitleFocusStrategy().attempt(session(term: "vscode", bundleId: "com.vscodium")))
 
 print(failures == 0 ? "\nAll focus logic tests passed." : "\n\(failures) test(s) failed.")
 exit(failures == 0 ? 0 : 1)

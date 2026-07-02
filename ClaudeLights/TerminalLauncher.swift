@@ -24,7 +24,8 @@ final class TerminalLauncher {
         WezTermFocusStrategy(),
         KittyFocusStrategy(),
         AppleScriptTtyFocusStrategy(),
-        WorkspaceFolderFocusStrategy(),
+        WorkspaceFolderFocusStrategy(), // exact + permissionless: must precede AX
+        WindowTitleFocusStrategy(),
         AppActivationFallbackStrategy(),
     ]
 
