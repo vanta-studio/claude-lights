@@ -1,0 +1,66 @@
+{
+  "//": "ClaudeLights hook wiring. Merge the contents of \"hooks\" below into your ~/.claude/settings.json. Replace the absolute paths with the location where you cloned this repository. Paths are wrapped in single quotes so they work even if the path contains spaces.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/ABSOLUTE/PATH/TO/claude-lights/hooks/working.sh'"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/ABSOLUTE/PATH/TO/claude-lights/hooks/done.sh'"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/ABSOLUTE/PATH/TO/claude-lights/hooks/compacting.sh'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/ABSOLUTE/PATH/TO/claude-lights/hooks/resume.sh'"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "idle_prompt|permission_prompt",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/ABSOLUTE/PATH/TO/claude-lights/hooks/needs_input.sh'"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "'/ABSOLUTE/PATH/TO/claude-lights/hooks/ended.sh'"
+          }
+        ]
+      }
+    ]
+  }
+}

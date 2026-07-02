@@ -1,0 +1,347 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A00000000000000000000B0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A0 /* main.swift */; };
+		1A00000000000000000000B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A1 /* AppDelegate.swift */; };
+		1A00000000000000000000B2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A2 /* Models.swift */; };
+		1A00000000000000000000B3 /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A3 /* SessionStore.swift */; };
+		1A00000000000000000000B4 /* FileWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A4 /* FileWatcher.swift */; };
+		1A00000000000000000000B5 /* StatusController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A5 /* StatusController.swift */; };
+		1A00000000000000000000B6 /* LoginItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A6 /* LoginItem.swift */; };
+		1A0000000000000000000BB1 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA1 /* Preferences.swift */; };
+		1A0000000000000000000BB2 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA2 /* AppModel.swift */; };
+		1A0000000000000000000BB3 /* StateAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA3 /* StateAppearance.swift */; };
+		1A0000000000000000000BB4 /* PanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA4 /* PanelView.swift */; };
+		1A0000000000000000000BB5 /* TerminalLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA5 /* TerminalLauncher.swift */; };
+		1A0000000000000000000BB6 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA6 /* NotificationManager.swift */; };
+		1A0000000000000000000BB7 /* SessionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA7 /* SessionHistory.swift */; };
+		1A0000000000000000000BB8 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA8 /* Updater.swift */; };
+		1A0000000000000000000BB9 /* UsageStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA9 /* UsageStats.swift */; };
+		1A0000000000000000000BBA /* AttentionSound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AAA /* AttentionSound.swift */; };
+		1A0000000000000000000D03 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0000000000000000000D02 /* Sparkle */; };
+		1A00000000000000000000B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A7 /* Assets.xcassets */; };
+		1A00000000000000000000B8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A8 /* Localizable.xcstrings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1A00000000000000000000A0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		1A00000000000000000000A1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1A00000000000000000000A2 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		1A00000000000000000000A3 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		1A00000000000000000000A4 /* FileWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileWatcher.swift; sourceTree = "<group>"; };
+		1A00000000000000000000A5 /* StatusController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusController.swift; sourceTree = "<group>"; };
+		1A00000000000000000000A6 /* LoginItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginItem.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA1 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA2 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA3 /* StateAppearance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateAppearance.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA4 /* PanelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelView.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA5 /* TerminalLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalLauncher.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA7 /* SessionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionHistory.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA8 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AA9 /* UsageStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStats.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AAA /* AttentionSound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionSound.swift; sourceTree = "<group>"; };
+		1A00000000000000000000A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1A00000000000000000000A8 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		1A00000000000000000000A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1A00000000000000000000AF /* ClaudeLights.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClaudeLights.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1A00000000000000000000F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A0000000000000000000D03 /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1A00000000000000000000C2 /* ClaudeLights */ = {
+			isa = PBXGroup;
+			children = (
+				1A00000000000000000000A0 /* main.swift */,
+				1A00000000000000000000A1 /* AppDelegate.swift */,
+				1A00000000000000000000A2 /* Models.swift */,
+				1A00000000000000000000A3 /* SessionStore.swift */,
+				1A00000000000000000000A4 /* FileWatcher.swift */,
+				1A00000000000000000000A5 /* StatusController.swift */,
+				1A00000000000000000000A6 /* LoginItem.swift */,
+				1A0000000000000000000AA1 /* Preferences.swift */,
+				1A0000000000000000000AA2 /* AppModel.swift */,
+				1A0000000000000000000AA3 /* StateAppearance.swift */,
+				1A0000000000000000000AA4 /* PanelView.swift */,
+				1A0000000000000000000AA5 /* TerminalLauncher.swift */,
+				1A0000000000000000000AA6 /* NotificationManager.swift */,
+				1A0000000000000000000AA7 /* SessionHistory.swift */,
+				1A0000000000000000000AA8 /* Updater.swift */,
+				1A0000000000000000000AA9 /* UsageStats.swift */,
+				1A0000000000000000000AAA /* AttentionSound.swift */,
+				1A00000000000000000000A7 /* Assets.xcassets */,
+				1A00000000000000000000A8 /* Localizable.xcstrings */,
+				1A00000000000000000000A9 /* Info.plist */,
+			);
+			path = ClaudeLights;
+			sourceTree = "<group>";
+		};
+		1A00000000000000000000C0 /* mainGroup */ = {
+			isa = PBXGroup;
+			children = (
+				1A00000000000000000000C2 /* ClaudeLights */,
+				1A00000000000000000000C1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1A00000000000000000000C1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1A00000000000000000000AF /* ClaudeLights.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1A00000000000000000000D0 /* ClaudeLights */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A00000000000000000000E1 /* Build configuration list for PBXNativeTarget "ClaudeLights" */;
+			buildPhases = (
+				1A00000000000000000000F0 /* Sources */,
+				1A00000000000000000000F2 /* Frameworks */,
+				1A00000000000000000000F1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ClaudeLights;
+			packageProductDependencies = (
+				1A0000000000000000000D02 /* Sparkle */,
+			);
+			productName = ClaudeLights;
+			productReference = 1A00000000000000000000AF /* ClaudeLights.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1A00000000000000000000CF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					1A00000000000000000000D0 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 1A00000000000000000000E0 /* Build configuration list for PBXProject "ClaudeLights" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1A00000000000000000000C0 /* mainGroup */;
+			packageReferences = (
+				1A0000000000000000000D01 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
+			productRefGroup = 1A00000000000000000000C1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1A00000000000000000000D0 /* ClaudeLights */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1A00000000000000000000F1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A00000000000000000000B7 /* Assets.xcassets in Resources */,
+				1A00000000000000000000B8 /* Localizable.xcstrings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1A00000000000000000000F0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1A00000000000000000000B0 /* main.swift in Sources */,
+				1A00000000000000000000B1 /* AppDelegate.swift in Sources */,
+				1A00000000000000000000B2 /* Models.swift in Sources */,
+				1A00000000000000000000B3 /* SessionStore.swift in Sources */,
+				1A00000000000000000000B4 /* FileWatcher.swift in Sources */,
+				1A00000000000000000000B5 /* StatusController.swift in Sources */,
+				1A00000000000000000000B6 /* LoginItem.swift in Sources */,
+				1A0000000000000000000BB1 /* Preferences.swift in Sources */,
+				1A0000000000000000000BB2 /* AppModel.swift in Sources */,
+				1A0000000000000000000BB3 /* StateAppearance.swift in Sources */,
+				1A0000000000000000000BB4 /* PanelView.swift in Sources */,
+				1A0000000000000000000BB5 /* TerminalLauncher.swift in Sources */,
+				1A0000000000000000000BB6 /* NotificationManager.swift in Sources */,
+				1A0000000000000000000BB7 /* SessionHistory.swift in Sources */,
+				1A0000000000000000000BB8 /* Updater.swift in Sources */,
+				1A0000000000000000000BB9 /* UsageStats.swift in Sources */,
+				1A0000000000000000000BBA /* AttentionSound.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1A00000000000000000000E2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1A00000000000000000000E3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		1A00000000000000000000E4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ClaudeLights/ClaudeLights.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ClaudeLights/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = studio.vanta.claudelights;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		1A00000000000000000000E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = ClaudeLights/ClaudeLights.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ClaudeLights/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = studio.vanta.claudelights;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A00000000000000000000E0 /* Build configuration list for PBXProject "ClaudeLights" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A00000000000000000000E2 /* Debug */,
+				1A00000000000000000000E3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1A00000000000000000000E1 /* Build configuration list for PBXNativeTarget "ClaudeLights" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1A00000000000000000000E4 /* Debug */,
+				1A00000000000000000000E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		1A0000000000000000000D01 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		1A0000000000000000000D02 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1A0000000000000000000D01 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1A00000000000000000000CF /* Project object */;
+}

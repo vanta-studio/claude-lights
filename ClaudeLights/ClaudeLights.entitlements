@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!--
+	  Allow loading the embedded Sparkle.framework, which is signed by the
+	  Sparkle project (a different Team ID) than this app. Under Hardened
+	  Runtime, Library Validation otherwise refuses to load frameworks signed
+	  by another team, which crashes the app at launch. This entitlement is
+	  notarization-compatible. App Sandbox is intentionally NOT enabled — the
+	  app needs unrestricted read access to ~/.claude/.
+	-->
+	<key>com.apple.security.cs.disable-library-validation</key>
+	<true/>
+</dict>
+</plist>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundleDisplayName</key>
+	<string>ClaudeLights</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.developer-tools</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>© 2026 Vanta Studio</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+
+	<!-- Needed to focus the exact terminal window/tab of a session via Apple
+	     events (Terminal.app / iTerm2). macOS prompts once for permission. -->
+	<key>NSAppleEventsUsageDescription</key>
+	<string>ClaudeLights focuses your terminal window when you click a session.</string>
+
+	<!-- Sparkle auto-updates. Fill these in before shipping (see README):
+	     - SUFeedURL: replace OWNER with your GitHub user/org.
+	     - SUPublicEDKey: paste the public key printed by Sparkle's generate_keys.
+	     - Set SUEnableAutomaticChecks to <true/> once the above are valid. -->
+	<key>SUFeedURL</key>
+	<string>https://github.com/vanta-studio/claude-lights/releases/latest/download/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>4Yaahmv5GmGMmP0EhDfN183ceOVtOrAN/EgR4YjATBQ=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+	<key>SUScheduledCheckInterval</key>
+	<integer>86400</integer>
+</dict>
+</plist>

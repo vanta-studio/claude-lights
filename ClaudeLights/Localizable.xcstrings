@@ -1,0 +1,268 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Back" : {
+      "comment" : "Button to leave the settings view",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Back" }
+        }
+      }
+    },
+    "Cache read" : {
+      "comment" : "Usage: cached input tokens read",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cache read" } } }
+    },
+    "Cache write" : {
+      "comment" : "Usage: cache creation tokens",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Cache write" } } }
+    },
+    "< 1 min" : {
+      "comment" : "Duration shorter than a minute",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "< 1 min" } } }
+    },
+    "Input" : {
+      "comment" : "Usage: input tokens",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Input" } } }
+    },
+    "No activity yet today" : {
+      "comment" : "Empty state for time-per-state",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No activity yet today" } } }
+    },
+    "Output" : {
+      "comment" : "Usage: output tokens",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Output" } } }
+    },
+    "Time per state" : {
+      "comment" : "Usage section: time spent in each state",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Time per state" } } }
+    },
+    "Today's tokens" : {
+      "comment" : "Usage section header",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's tokens" } } }
+    },
+    "Total" : {
+      "comment" : "Usage: total tokens",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Total" } } }
+    },
+    "Usage" : {
+      "comment" : "Header/title for the usage view",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Usage" } } }
+    },
+    "Used to focus a session's terminal — fallback when it can't be detected." : {
+      "comment" : "Explains the terminal setting",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Used to focus a session's terminal — fallback when it can't be detected." }
+        }
+      }
+    },
+    "Clear finished" : {
+      "comment" : "Button to remove all done sessions",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Clear finished" } } }
+    },
+    "Check for Updates…" : {
+      "comment" : "Menu item to trigger a Sparkle update check",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Check for Updates…" } } }
+    },
+    "General" : {
+      "comment" : "Settings section header",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "General" } } }
+    },
+    "History" : {
+      "comment" : "Header/title for the transition history",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "History" } } }
+    },
+    "No history yet" : {
+      "comment" : "Empty state for the history view",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "No history yet" } } }
+    },
+    "Remove" : {
+      "comment" : "Tooltip for removing a session",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Remove" } } }
+    },
+    "Claude Code is compacting context" : {
+      "comment" : "Notification title",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Claude Code is compacting context" } } }
+    },
+    "Claude Code is done" : {
+      "comment" : "Notification title",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Claude Code is done" } } }
+    },
+    "Compacting" : {
+      "comment" : "Session state: compacting context",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Compacting" } } }
+    },
+    "Idle" : {
+      "comment" : "Session state: done and untouched for a while",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Idle" } } }
+    },
+    "Claude Code is working" : {
+      "comment" : "Notification title",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Claude Code is working" } } }
+    },
+    "Claude Code needs your input" : {
+      "comment" : "Notification title",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Claude Code needs your input" } } }
+    },
+    "Notifications" : {
+      "comment" : "Settings section header",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } } }
+    },
+    "Play sound on needs input" : {
+      "comment" : "Settings toggle",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Play sound on needs input" } } }
+    },
+    "When a session is done" : {
+      "comment" : "Settings toggle",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "When a session is done" } } }
+    },
+    "When a session needs input" : {
+      "comment" : "Settings toggle",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "When a session needs input" } } }
+    },
+    "When a session starts working" : {
+      "comment" : "Settings toggle",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "When a session starts working" } } }
+    },
+    "Done" : {
+      "comment" : "Session state: finished, waiting for prompt",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
+          }
+        }
+      }
+    },
+    "Needs input" : {
+      "comment" : "Session state: waiting on the user",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Needs input"
+          }
+        }
+      }
+    },
+    "No active sessions" : {
+      "comment" : "Menu header when nothing is running",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No active sessions"
+          }
+        }
+      }
+    },
+    "Open terminal" : {
+      "comment" : "Tooltip on a session row",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Open terminal" }
+        }
+      }
+    },
+    "Quit" : {
+      "comment" : "Quit the application",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quit"
+          }
+        }
+      }
+    },
+    "Settings" : {
+      "comment" : "Button to open the settings view",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Settings" }
+        }
+      }
+    },
+    "Sound" : {
+      "comment" : "Label for the attention-sound picker",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Sound" } } }
+    },
+    "Preview" : {
+      "comment" : "Tooltip: preview the selected sound",
+      "extractionState" : "manual",
+      "localizations" : { "en" : { "stringUnit" : { "state" : "translated", "value" : "Preview" } } }
+    },
+    "Start at Login" : {
+      "comment" : "Toggle launching the app at login",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start at Login"
+          }
+        }
+      }
+    },
+    "Terminal" : {
+      "comment" : "Settings section: terminal app picker",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : { "state" : "translated", "value" : "Terminal" }
+        }
+      }
+    },
+    "Working" : {
+      "comment" : "Session state: actively processing",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Working"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
