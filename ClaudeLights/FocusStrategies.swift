@@ -33,18 +33,40 @@ enum FocusSupport {
         "Alacritty": "org.alacritty",
     ]
 
-    /// Additional hosts we accept from the captured `__CFBundleIdentifier`:
-    /// IDEs with embedded terminals that set no TERM_PROGRAM, plus VS Code
-    /// forks that report `TERM_PROGRAM=vscode` under their own bundle id.
-    private static let allowedHostBundleIds: Set<String> = [
-        "com.apple.dt.Xcode",
-        "com.google.android.studio",
+    /// Editors of the VS Code family (report `TERM_PROGRAM=vscode` or `zed`).
+    /// Only these may override the term→app mapping via the captured
+    /// bundle id, so a crafted status entry can never redirect a folder-open
+    /// to an unrelated (if allowlisted) app.
+    static let editorBundleIds: Set<String> = [
+        "com.microsoft.VSCode",
+        "com.microsoft.VSCodeInsiders",
+        "com.todesktop.230313mzl4w4u92", // Cursor
+        "dev.zed.Zed",
         "com.google.antigravity",
         "com.exafunction.windsurf",
-        "com.microsoft.VSCodeInsiders",
         "com.vscodium",
         "com.vscodium.VSCodiumInsiders",
     ]
+
+    /// Additional hosts we accept from the captured `__CFBundleIdentifier`:
+    /// IDEs with embedded terminals that set no TERM_PROGRAM, plus the VS
+    /// Code forks above.
+    private static let allowedHostBundleIds: Set<String> = editorBundleIds.union([
+        "com.apple.dt.Xcode",
+        "com.google.android.studio",
+    ])
+
+    /// Hosts the Accessibility window-title strategy may drive: IDE-class
+    /// apps only. Deliberately NOT generic terminals — their windows can hold
+    /// live shells (SSH to production, say), and the title selector comes
+    /// from the world-writable status file, so an attacker must not be able
+    /// to steer which terminal window pops in front of the user's keyboard.
+    static func isWindowTitleHost(_ bundleId: String) -> Bool {
+        editorBundleIds.contains(bundleId)
+            || bundleId.hasPrefix("com.jetbrains.")
+            || bundleId == "com.apple.dt.Xcode"
+            || bundleId == "com.google.android.studio"
+    }
 
     /// The status file is world-writable, so `bundle_id` is attacker-
     /// controlled input: only terminals/IDEs we know may ever be activated
@@ -200,47 +222,78 @@ enum FocusSupport {
         }
     }
 
-    // MARK: - Accessibility window targeting (IDEs and other terminals)
+    // MARK: - Accessibility window targeting (IDEs)
 
-    /// Whether ClaudeLights may drive other apps' windows via the
-    /// Accessibility API. The first time an IDE session actually needs it,
-    /// the system permission dialog is shown (once per launch); until the
-    /// user grants access the caller falls through to app activation.
-    private static var promptedForAccessibility = false
-    static func ensureAccessibilityTrusted() -> Bool {
-        if AXIsProcessTrusted() { return true }
-        if !promptedForAccessibility {
-            promptedForAccessibility = true
-            let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
-            _ = AXIsProcessTrustedWithOptions(options)
-        }
-        return false
+    enum AccessibilityState {
+        case trusted
+        /// We just showed the system permission dialog for the first time
+        /// this launch — the click's outcome IS the dialog; don't activate
+        /// other apps over it.
+        case justPrompted
+        /// Not trusted and already prompted; stay silent.
+        case denied
     }
+
+    private static var promptedForAccessibility = false
+    static func accessibilityState() -> AccessibilityState {
+        if AXIsProcessTrusted() { return .trusted }
+        if promptedForAccessibility { return .denied }
+        promptedForAccessibility = true
+        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+        _ = AXIsProcessTrustedWithOptions(options)
+        return .justPrompted
+    }
+
+    /// Generic directory names that would match half the screen.
+    private static let candidateStopwords: Set<String> = [
+        "src", "lib", "bin", "app", "apps", "pkg", "code", "main", "test",
+        "tests", "docs", "dist", "build", "tmp", "var", "opt", "etc", "dev",
+        "work", "repo", "repos", "project", "projects", "documents",
+        "desktop", "downloads", "applications", "volumes", "users", "home",
+    ]
 
     /// Title fragments to look for in window titles, derived from the
     /// session's working directory: its path components, deepest first, so
-    /// `/Users/me/projects/frontend/src` prefers a window named after `src`,
-    /// then `frontend`. Components of the home directory path and very short
-    /// names are skipped — they'd match half the screen.
+    /// `/Users/me/projects/frontend/api` prefers a window named after `api`,
+    /// then `frontend`. The home-directory prefix is dropped positionally
+    /// (a project that happens to share the username survives), and short or
+    /// generic names are skipped.
     static func titleMatchCandidates(forCwd cwd: String) -> [String] {
-        let homeComponents = Set(URL(fileURLWithPath: NSHomeDirectory()).pathComponents)
-        let candidates = URL(fileURLWithPath: cwd).pathComponents
+        var components = URL(fileURLWithPath: cwd).standardizedFileURL.pathComponents
+        let homeComponents = URL(fileURLWithPath: NSHomeDirectory()).standardizedFileURL.pathComponents
+        if components.count >= homeComponents.count,
+           Array(components.prefix(homeComponents.count)) == homeComponents {
+            components.removeFirst(homeComponents.count)
+        }
+        let candidates = components
             .reversed()
-            .filter { $0 != "/" && $0.count >= 3 && !homeComponents.contains($0) }
-        return Array(candidates.prefix(4))
+            .filter { $0 != "/" && $0.count >= 3 && !candidateStopwords.contains($0.lowercased()) }
+        return Array(candidates.prefix(3))
+    }
+
+    /// Whether `title` contains `candidate` as a whole word (case-insensitive)
+    /// — "frontend" must not match a window that merely shows "frontend-v2",
+    /// so hyphen/underscore count as word characters at the boundaries.
+    static func titleMatches(_ title: String, candidate: String) -> Bool {
+        let pattern = "(?<![\\p{L}\\p{N}_-])\(NSRegularExpression.escapedPattern(for: candidate))(?![\\p{L}\\p{N}_-])"
+        return title.range(of: pattern, options: [.regularExpression, .caseInsensitive]) != nil
     }
 
     /// Raises the app window whose title mentions one of `candidates`.
-    /// Returns false when no window matches (or accessibility is denied).
+    /// Returns false when no window matches or the raise action fails.
     static func raiseWindow(pid: pid_t, matching candidates: [String]) -> Bool {
         let axApp = AXUIElementCreateApplication(pid)
+        // Bound every AX round-trip: a beachballing IDE must not hold the
+        // focus queue for the ~6s default timeout per window.
+        AXUIElementSetMessagingTimeout(axApp, 1.0)
         var windowsValue: CFTypeRef?
         guard AXUIElementCopyAttributeValue(axApp, kAXWindowsAttribute as CFString, &windowsValue) == .success,
               let windows = windowsValue as? [AXUIElement], !windows.isEmpty
         else { return false }
 
         var titles: [(window: AXUIElement, title: String)] = []
-        for window in windows {
+        for window in windows.prefix(40) {
+            AXUIElementSetMessagingTimeout(window, 1.0)
             var titleValue: CFTypeRef?
             guard AXUIElementCopyAttributeValue(window, kAXTitleAttribute as CFString, &titleValue) == .success,
                   let title = titleValue as? String, !title.isEmpty
@@ -249,8 +302,10 @@ enum FocusSupport {
         }
 
         for candidate in candidates {
-            for (window, title) in titles where title.range(of: candidate, options: .caseInsensitive) != nil {
-                AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+            for (window, title) in titles where titleMatches(title, candidate: candidate) {
+                guard AXUIElementPerformAction(window, kAXRaiseAction as CFString) == .success else {
+                    continue
+                }
                 AXUIElementSetAttributeValue(window, kAXMainAttribute as CFString, kCFBooleanTrue)
                 return true
             }
@@ -417,28 +472,43 @@ struct AppleScriptTtyFocusStrategy: FocusStrategy {
 
 // MARK: - Tier 2: exact window
 
-/// Any running host app (JetBrains, Xcode, Antigravity and other VS Code
-/// forks, Ghostty, Warp, …): find the window whose title mentions the
-/// session's directory and raise it via the Accessibility API.
+/// Running IDEs (JetBrains, Xcode, Android Studio, VS Code family when the
+/// workspace-folder strategy didn't handle them): find the window whose title
+/// mentions the session's directory and raise it via the Accessibility API.
 ///
-/// IDE and terminal window titles almost always contain the project folder
-/// name, so matching the cwd's path components (deepest first) picks the
-/// right window without any per-app scripting support. Needs the one-time
-/// Accessibility permission; until granted, the chain falls through to app
-/// activation.
+/// IDE window titles almost always contain the project folder name, so
+/// matching the cwd's path components (deepest first, whole-word) picks the
+/// right window without per-app scripting support. Restricted to IDE-class
+/// hosts — see `isWindowTitleHost`. Needs the one-time Accessibility
+/// permission: the first qualifying click shows the system dialog (and stops
+/// there); afterwards the chain falls through to app activation until access
+/// is granted.
 struct WindowTitleFocusStrategy: FocusStrategy {
     func attempt(_ session: SessionStatus) -> Bool {
         guard let bundleId = FocusSupport.hostBundleId(of: session),
+              FocusSupport.isWindowTitleHost(bundleId),
               let cwd = session.cwd,
+              FileManager.default.fileExists(atPath: cwd),
               let app = NSRunningApplication.runningApplications(withBundleIdentifier: bundleId).first
         else { return false }
 
         let candidates = FocusSupport.titleMatchCandidates(forCwd: cwd)
-        guard !candidates.isEmpty,
-              FocusSupport.ensureAccessibilityTrusted(),
-              FocusSupport.raiseWindow(pid: app.processIdentifier, matching: candidates)
-        else { return false }
+        guard !candidates.isEmpty else { return false }
 
+        switch FocusSupport.accessibilityState() {
+        case .trusted:
+            break
+        case .justPrompted:
+            // The click's outcome is the permission dialog; activating the
+            // IDE now would bury it.
+            return true
+        case .denied:
+            return false
+        }
+
+        guard FocusSupport.raiseWindow(pid: app.processIdentifier, matching: candidates) else {
+            return false
+        }
         FocusSupport.runOnMain { app.activate(options: []) }
         return true
     }
@@ -456,15 +526,24 @@ struct WorkspaceFolderFocusStrategy: FocusStrategy {
     private static let terms: Set<String> = ["vscode", "cursor", "zed"]
 
     func attempt(_ session: SessionStatus) -> Bool {
-        // hostBundleId (not the term map): VS Code forks like Antigravity or
-        // Windsurf report TERM_PROGRAM=vscode but must open the folder in
-        // their own app, identified by the captured bundle id.
+        // VS Code forks like Antigravity or Windsurf report
+        // TERM_PROGRAM=vscode but must open the folder in their own app —
+        // the captured bundle id may override the term map, but ONLY within
+        // the editor family (a crafted status entry must not redirect a
+        // folder-open into some other allowlisted app).
         guard let term = session.term, Self.terms.contains(term),
-              let bundleId = FocusSupport.hostBundleId(of: session),
-              FocusSupport.isRunning(bundleId: bundleId),
               let cwd = session.cwd,
               FileManager.default.fileExists(atPath: cwd)
         else { return false }
+        let bundleId: String
+        if let captured = session.bundleId, FocusSupport.editorBundleIds.contains(captured) {
+            bundleId = captured
+        } else if let mapped = FocusSupport.bundleIdByTerm[term] {
+            bundleId = mapped
+        } else {
+            return false
+        }
+        guard FocusSupport.isRunning(bundleId: bundleId) else { return false }
 
         var opened = false
         FocusSupport.runOnMain {
