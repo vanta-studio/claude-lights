@@ -24,6 +24,7 @@
 		1A0000000000000000000BB8 /* Updater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA8 /* Updater.swift */; };
 		1A0000000000000000000BB9 /* UsageStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AA9 /* UsageStats.swift */; };
 		1A0000000000000000000BBA /* AttentionSound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AAA /* AttentionSound.swift */; };
+		1A0000000000000000000BBB /* HookInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0000000000000000000AAB /* HookInstaller.swift */; };
 		1A0000000000000000000D03 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 1A0000000000000000000D02 /* Sparkle */; };
 		1A00000000000000000000B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A7 /* Assets.xcassets */; };
 		1A00000000000000000000B8 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 1A00000000000000000000A8 /* Localizable.xcstrings */; };
@@ -49,6 +50,7 @@
 		1A0000000000000000000AA8 /* Updater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updater.swift; sourceTree = "<group>"; };
 		1A0000000000000000000AA9 /* UsageStats.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageStats.swift; sourceTree = "<group>"; };
 		1A0000000000000000000AAA /* AttentionSound.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttentionSound.swift; sourceTree = "<group>"; };
+		1A0000000000000000000AAB /* HookInstaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HookInstaller.swift; sourceTree = "<group>"; };
 		1A00000000000000000000A7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A00000000000000000000A8 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		1A00000000000000000000A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				1A0000000000000000000AA8 /* Updater.swift */,
 				1A0000000000000000000AA9 /* UsageStats.swift */,
 				1A0000000000000000000AAA /* AttentionSound.swift */,
+				1A0000000000000000000AAB /* HookInstaller.swift */,
 				1A00000000000000000000A7 /* Assets.xcassets */,
 				1A00000000000000000000A8 /* Localizable.xcstrings */,
 				1A00000000000000000000A9 /* Info.plist */,
@@ -276,6 +279,7 @@
 				1A0000000000000000000BB8 /* Updater.swift in Sources */,
 				1A0000000000000000000BB9 /* UsageStats.swift in Sources */,
 				1A0000000000000000000BBA /* AttentionSound.swift in Sources */,
+				1A0000000000000000000BBB /* HookInstaller.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
