@@ -105,6 +105,9 @@ final class HookInstaller: ObservableObject {
         helperDirectory.appendingPathComponent(Self.helperName)
     }
 
+    /// The settings file this installer reads and writes (for "open in editor").
+    var settingsFileURL: URL { settingsURL }
+
     // MARK: - Status detection
 
     /// Does this hook command belong to us (current helper wiring)?
