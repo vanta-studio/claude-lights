@@ -19,6 +19,10 @@ final class AppModel: ObservableObject {
     var activateHandler: ((SessionStatus) -> Void)?
     /// Invoked when the user removes a single session.
     var removeHandler: ((SessionStatus) -> Void)?
+    /// Invoked when the user renames a session (nil/blank clears the label).
+    var renameHandler: ((SessionStatus, String?) -> Void)?
+    /// User-assigned session names, mirrored from `SessionLabels`.
+    @Published var sessionLabels: [String: String] = [:]
     /// Invoked when the user clears all finished sessions.
     var clearFinishedHandler: (() -> Void)?
     /// Invoked when the user asks to check for updates.
@@ -68,6 +72,15 @@ final class AppModel: ObservableObject {
 
     func remove(_ session: SessionStatus) {
         removeHandler?(session)
+    }
+
+    func rename(_ session: SessionStatus, to label: String?) {
+        renameHandler?(session, label)
+    }
+
+    /// The name shown for a session: the user's label, else project/short id.
+    func displayName(for session: SessionStatus) -> String {
+        sessionLabels[session.sessionId] ?? session.displayName
     }
 
     func clearFinished() {

@@ -90,8 +90,11 @@ struct PanelView: View {
                 ForEach(model.sessions, id: \.sessionId) { session in
                     SessionRow(
                         session: session,
+                        displayName: model.displayName(for: session),
+                        customLabel: model.sessionLabels[session.sessionId],
                         onTap: { model.activate(session) },
-                        onRemove: { model.remove(session) }
+                        onRemove: { model.remove(session) },
+                        onRename: { model.rename(session, to: $0) }
                     )
                 }
                 if model.hasFinishedSessions {
@@ -123,12 +126,20 @@ struct PanelView: View {
     }
 }
 
-/// A single, clickable session row with a hover-revealed remove button.
+/// A single, clickable session row with a hover-revealed remove button and
+/// context-menu renaming (inline text field; Enter commits, Esc cancels,
+/// an empty name restores the project default).
 private struct SessionRow: View {
     let session: SessionStatus
+    let displayName: String
+    let customLabel: String?
     let onTap: () -> Void
     let onRemove: () -> Void
+    let onRename: (String?) -> Void
     @State private var hovering = false
+    @State private var isEditing = false
+    @State private var draft = ""
+    @FocusState private var nameFieldFocused: Bool
 
     private var isIdle: Bool { session.isIdle() }
 
@@ -142,47 +153,111 @@ private struct SessionRow: View {
 
     var body: some View {
         HStack(spacing: 8) {
-            Button(action: onTap) {
-                HStack(spacing: 8) {
-                    Image(systemName: symbolName)
-                        .foregroundStyle(dotColor)
-                        .font(.system(size: 12))
-                        .frame(width: 14)
-
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text(session.displayName)
-                            .font(.callout)
-                            .lineLimit(1)
-                        Text(isIdle ? LocalizedStringKey("Idle") : stateLabel)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    Spacer()
-
-                    timeView
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .monospacedDigit()
+            if isEditing {
+                editingContent
+            } else {
+                Button(action: onTap) {
+                    rowContent
+                        .contentShape(Rectangle())
                 }
-                .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
-            // Tooltip shows the full (possibly truncated) name plus the action.
-            .help(Text(verbatim: session.displayName))
+                .buttonStyle(.plain)
+                // Tooltip shows the full (possibly truncated) name plus the action.
+                .help(Text(verbatim: displayName))
+                .contextMenu {
+                    Button { beginEditing() } label: { Text("Rename…") }
+                    if customLabel != nil {
+                        Button { onRename(nil) } label: { Text("Clear name") }
+                    }
+                    Button(role: .destructive, action: onRemove) { Text("Remove") }
+                }
 
-            // Remove button, shown on hover to keep the row clean.
-            Button(action: onRemove) {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundStyle(.secondary)
+                // Remove button, shown on hover to keep the row clean.
+                Button(action: onRemove) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+                .buttonStyle(.plain)
+                .help(Text("Remove"))
+                .opacity(hovering ? 1 : 0)
             }
-            .buttonStyle(.plain)
-            .help(Text("Remove"))
-            .opacity(hovering ? 1 : 0)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 5)
         .onHover { hovering = $0 }
+    }
+
+    private var rowContent: some View {
+        HStack(spacing: 8) {
+            Image(systemName: symbolName)
+                .foregroundStyle(dotColor)
+                .font(.system(size: 12))
+                .frame(width: 14)
+
+            VStack(alignment: .leading, spacing: 1) {
+                Text(displayName)
+                    .font(.callout)
+                    .lineLimit(1)
+                Text(isIdle ? LocalizedStringKey("Idle") : stateLabel)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
+            Spacer()
+
+            timeView
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                .monospacedDigit()
+        }
+    }
+
+    private var editingContent: some View {
+        HStack(spacing: 8) {
+            Image(systemName: symbolName)
+                .foregroundStyle(dotColor)
+                .font(.system(size: 12))
+                .frame(width: 14)
+            TextField(session.displayName, text: $draft)
+                .textFieldStyle(.plain)
+                .font(.callout)
+                .focused($nameFieldFocused)
+                .onSubmit { commitEditing() }
+                .onExitCommand { cancelEditing() }
+                // Finder-style commit on blur: clicking elsewhere must not
+                // leave the row stuck as an unfocusable text field.
+                .onChange(of: nameFieldFocused) { focused in
+                    if !focused { commitEditing() }
+                }
+        }
+    }
+
+    private func beginEditing() {
+        draft = customLabel ?? ""
+        isEditing = true
+        focusNameField()
+    }
+
+    /// The context menu's teardown can still hold first responder for a
+    /// moment, dropping a single focus request — retry briefly.
+    private func focusNameField(attempt: Int = 0) {
+        guard isEditing, attempt < 5 else { return }
+        nameFieldFocused = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.08) {
+            if isEditing && !nameFieldFocused {
+                focusNameField(attempt: attempt + 1)
+            }
+        }
+    }
+
+    private func commitEditing() {
+        guard isEditing else { return }
+        isEditing = false
+        onRename(draft)
+    }
+
+    private func cancelEditing() {
+        // Clear the flag before focus moves so the blur handler won't commit.
+        isEditing = false
     }
 
     private var stateLabel: LocalizedStringKey { stateDisplayLabel(session.state) }

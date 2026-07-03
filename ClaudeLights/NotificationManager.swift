@@ -42,10 +42,10 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     }
 
     /// Posts a notification describing a session's new state.
-    func notify(session: SessionStatus) {
+    func notify(session: SessionStatus, displayName: String? = nil) {
         let content = UNMutableNotificationContent()
         content.title = title(for: session.state)
-        content.body = session.displayName
+        content.body = displayName ?? session.displayName
         content.userInfo = ["sessionId": session.sessionId]
         // Sound is handled separately (see playAttentionSound) so it can be
         // toggled independently of banners.
