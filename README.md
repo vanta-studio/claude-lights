@@ -39,9 +39,12 @@ Uninstalling them is one click in Settings.
   height="20"> <img src="docs/media/pill-needs-input.svg" alt="needs input"
   height="20"> <img src="docs/media/pill-idle.svg" alt="idle" height="20">.
   With parallel sessions the icon shows the *worst* state, so red always wins.
-- **Click a session → jump to its terminal**: focuses the exact window/tab in
-  Terminal.app and iTerm2 (via the session's tty), activates the right app
-  elsewhere (VS Code, Cursor, Ghostty, WezTerm, Warp, kitty, Alacritty, …).
+- **Click a session → jump to *that* session**: the exact tab in Terminal.app
+  and iTerm2, the exact pane in tmux, WezTerm, and kitty — and with the tiny
+  optional [companion extension](companion/), the exact Claude Code terminal
+  **inside** VS Code, Antigravity, Cursor, Windsurf, or VSCodium, even with
+  several sessions open in the same window. JetBrains IDE and Xcode windows
+  are matched by project; everything else gets its app fronted.
 - **Desktop notifications** per state, debounced against rapid flips, with an
   optional sound when a session needs input.
 - **Work timers**: live active-time stopwatch per session that pauses while
@@ -75,6 +78,24 @@ Claude Code ──hook events──► claudelights-hook ──► ~/.claude/cla
 
 The app self-heals: after every update it re-installs the helper binary if it
 changed, and Settings shows repair/migrate actions if the wiring ever drifts.
+
+### Jumping into the right editor session
+
+Running several Claude Code sessions inside one editor window? The
+[companion extension](companion/) turns a click in the menu bar into a jump
+to the **exact integrated-terminal tab** of that session: ClaudeLights knows
+each session's `claude` process id and deep-links
+`antigravity://…/focus?pid=…` (or `vscode://`, `cursor://`, …); the
+extension matches the pid against the open terminals' process trees and
+focuses the right one. Install once per editor:
+
+```sh
+cd companion && ./build.sh
+antigravity --install-extension claudelights-companion-*.vsix   # or: code / cursor / windsurf
+```
+
+No configuration — ClaudeLights detects the companion automatically and
+falls back to window-level focusing without it.
 
 ## Requirements
 
