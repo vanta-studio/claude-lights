@@ -41,7 +41,7 @@
 	     - SUPublicEDKey: paste the public key printed by Sparkle's generate_keys.
 	     - Set SUEnableAutomaticChecks to <true/> once the above are valid. -->
 	<key>SUFeedURL</key>
-	<string>https://github.com/vanta-studio/claude-lights/releases/latest/download/appcast.xml</string>
+	<string>https://github.com/tokyn-studio/claude-lights/releases/latest/download/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>4Yaahmv5GmGMmP0EhDfN183ceOVtOrAN/EgR4YjATBQ=</string>
 	<key>SUEnableAutomaticChecks</key>

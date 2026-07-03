@@ -80,6 +80,7 @@ render("card-title.png") { _ in
 
 renderLowerThird("ov-parallel.png", "Run Claude Code sessions in parallel — and stop babysitting them")
 renderLowerThird("ov-red.png", "The moment Claude needs you, the light turns red")
+renderLowerThird("ov-click.png", "One click jumps straight to the right window")
 renderLowerThird("ov-answer.png", "Answer — everyone gets back to work")
 renderLowerThird("ov-features.png", "Named sessions · live work timers · usage stats")
 
@@ -93,7 +94,7 @@ render("card-end.png") { _ in
                  y: 480,
                  font: .systemFont(ofSize: 40, weight: .regular),
                  color: NSColor.white.withAlphaComponent(0.72))
-    drawCentered("github.com/vanta-studio/claude-lights",
+    drawCentered("github.com/tokyn-studio/claude-lights",
                  y: 380,
                  font: .monospacedSystemFont(ofSize: 44, weight: .medium),
                  color: NSColor.systemYellow)

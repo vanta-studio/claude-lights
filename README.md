@@ -21,9 +21,9 @@ Code hooks writing a JSON file and a menu bar app watching it. macOS 13+.
 ## Install
 
 1. **Download** the latest `ClaudeLights.dmg` from
-   [Releases](https://github.com/vanta-studio/claude-lights/releases) and drag
+   [Releases](https://github.com/tokyn-studio/claude-lights/releases) and drag
    the app to Applications
-   *(or `brew install --cask vanta-studio/tap/claudelights`)*.
+   *(or `brew install --cask tokyn-studio/tap/claudelights`)*.
 2. **Open ClaudeLights** and click **Install Hooks** in the welcome window.
 3. **Restart** any running Claude Code sessions. That's it.
 
@@ -206,7 +206,7 @@ key lives in `Info.plist`).
 
 `release.sh` also writes `build/claudelights.rb` — the filled-in Homebrew cask
 (source template: `packaging/homebrew/claudelights.rb`). Copy it into the tap
-repo (`vanta-studio/homebrew-tap`, as `Casks/claudelights.rb`) and push.
+repo (`tokyn-studio/homebrew-tap`, as `Casks/claudelights.rb`) and push.
 
 </details>
 

@@ -1,20 +1,20 @@
 # Homebrew cask for ClaudeLights.
 #
-# Lives in the tap repository (github.com/vanta-studio/homebrew-tap) at
+# Lives in the tap repository (github.com/tokyn-studio/homebrew-tap) at
 # Casks/claudelights.rb; this copy is the source of truth. scripts/release.sh
 # prints a filled-in stanza (version + sha256) after every notarized build —
 # paste that into the tap and push.
 #
-# Install:  brew install --cask vanta-studio/tap/claudelights
+# Install:  brew install --cask tokyn-studio/tap/claudelights
 
 cask "claudelights" do
   version "1.0"
   sha256 "REPLACE_WITH_DMG_SHA256"
 
-  url "https://github.com/vanta-studio/claude-lights/releases/download/v#{version}/ClaudeLights.dmg"
+  url "https://github.com/tokyn-studio/claude-lights/releases/download/v#{version}/ClaudeLights.dmg"
   name "ClaudeLights"
   desc "Menu bar traffic light for Claude Code sessions"
-  homepage "https://github.com/vanta-studio/claude-lights"
+  homepage "https://github.com/tokyn-studio/claude-lights"
 
   auto_updates true # Sparkle
   depends_on macos: ">= :ventura"
