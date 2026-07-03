@@ -16,6 +16,7 @@ struct OnboardingView: View {
             notificationStep
             demoStep
             Divider()
+            supportLine
             footer
         }
         .padding(24)
@@ -144,6 +145,23 @@ struct OnboardingView: View {
             Image(systemName: "\(number).circle.fill")
                 .foregroundStyle(.secondary)
             Text(title).font(.headline)
+        }
+    }
+
+    /// Soft donation seed: first-run is too early for a real ask, so this only
+    /// plants the thought — the anchored amounts live in the donation window.
+    @ViewBuilder
+    private var supportLine: some View {
+        if model.donationAvailable {
+            HStack(spacing: 4) {
+                Text("☕ Free and made by one person. If it saves you time, you can")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Button { model.showDonation() } label: {
+                    Text("support it").font(.caption)
+                }
+                .buttonStyle(.link)
+            }
         }
     }
 
