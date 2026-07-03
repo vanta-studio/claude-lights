@@ -52,7 +52,7 @@ xcodebuild \
   -configuration Release \
   -archivePath "$ARCHIVE" \
   DEVELOPMENT_TEAM="$TEAM_ID" \
-  CODE_SIGN_STYLE=Automatic \
+  CODE_SIGN_STYLE=Manual \
   CODE_SIGN_IDENTITY="Developer ID Application" \
   archive
 
@@ -66,7 +66,8 @@ cat > "$EXPORT_OPTS" <<PLIST
 <dict>
 	<key>method</key><string>developer-id</string>
 	<key>teamID</key><string>${TEAM_ID}</string>
-	<key>signingStyle</key><string>automatic</string>
+	<key>signingStyle</key><string>manual</string>
+	<key>signingCertificate</key><string>Developer ID Application</string>
 </dict>
 </plist>
 PLIST
