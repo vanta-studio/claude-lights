@@ -12,3 +12,6 @@ ClaudeLights.xcodeproj/xcuserdata/
 
 # Local status/test artifacts
 claudelights-status.json
+
+# Raw footage (final hero.mp4/hero.gif are committed, raw recordings are not)
+docs/media/*.mov
