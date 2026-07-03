@@ -16,11 +16,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private let usage = UsageStats()
     private let updater = Updater()
     private let installer = HookInstaller()
+    private let labels = SessionLabels()
     private lazy var model = AppModel(preferences: preferences)
     private lazy var demo = DemoSessionSimulator(statusURL: statusURL)
     private lazy var onboarding = OnboardingController(model: model)
     private var controller: StatusController?
     private var watcher: FileWatcher?
+    private var labelsWatcher: FileWatcher?
     private var cancellables: Set<AnyCancellable> = []
 
     /// Periodically re-reads the file so stale sessions expire even when no hook
@@ -52,6 +54,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self.store.clearFinished(from: self.statusURL)
             self.reload()
         }
+
+        // Renaming writes the labels file; the mirror updates immediately.
+        model.renameHandler = { [weak self] session, label in
+            guard let self else { return }
+            self.labels.setLabel(label, for: session.sessionId)
+            self.model.sessionLabels = self.labels.labels
+        }
+        model.sessionLabels = labels.labels
 
         // Software updates (Sparkle). No-op in the swiftc dev build.
         model.canCheckForUpdates = updater.canCheckForUpdates
@@ -94,6 +104,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         watcher.start()
         self.watcher = watcher
 
+        // External writers (e.g. a slash-command script) can update labels too.
+        let labelsWatcher = FileWatcher(url: labels.fileURL) { [weak self] in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.labels.reload()
+                self.model.sessionLabels = self.labels.labels
+            }
+        }
+        labelsWatcher.start()
+        self.labelsWatcher = labelsWatcher
+
         cleanupTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
             self?.reload()
         }
@@ -122,6 +143,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func reload() {
         store.reload(from: statusURL)
         model.update(sessions: store.sessions)
+        labels.prune(keeping: Set(store.sessions.map(\.sessionId)))
+        model.sessionLabels = labels.labels
         controller?.updateIcon()
         handleTransitions(store.recentTransitions)
     }
@@ -150,7 +173,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             guard let self else { return }
             self.pendingNotifications[session.sessionId] = nil
             if self.preferences.shouldNotify(for: session.state) {
-                self.notifications.notify(session: session)
+                self.notifications.notify(
+                    session: session,
+                    displayName: self.model.displayName(for: session))
             }
             if session.state == .needsInput, self.preferences.soundOnNeedsInput {
                 AttentionSound.play(self.preferences.attentionSound)
