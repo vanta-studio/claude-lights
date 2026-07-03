@@ -2,16 +2,15 @@ import Foundation
 
 /// Stripe Payment Link destinations for the donation tiers.
 ///
-/// SANDBOX links (test mode, product prod_UopeycNCqjxNJr) — swap for live
-/// links once Stripe onboarding is complete, BEFORE any public release.
+/// LIVE links (product prod_Uor6ayhV6aWgsG).
 /// Should the slugs ever say REPLACE again, `isConfigured` turns false and
 /// every donation entry point in the app (welcome line, panel button,
 /// auto-prompt) stays hidden.
 enum DonationLinks {
-    static let tier5 = URL(string: "https://buy.stripe.com/test_4gM00i8c83JDfGR1ERaVa00")!
-    static let tier10 = URL(string: "https://buy.stripe.com/test_cNi4gyeAw1BveCN5V7aVa01")!
-    static let tier25 = URL(string: "https://buy.stripe.com/test_4gM9AS8c8dkd9it0ANaVa02")!
-    static let custom = URL(string: "https://buy.stripe.com/test_5kQ7sK3VSgwp7al4R3aVa03")!
+    static let tier5 = URL(string: "https://buy.stripe.com/14A28q1PI9fSafadh0aZi04")!
+    static let tier10 = URL(string: "https://buy.stripe.com/00wbJ0cumajW3QM5OyaZi05")!
+    static let tier25 = URL(string: "https://buy.stripe.com/7sYeVc7a2bo0872ccWaZi06")!
+    static let custom = URL(string: "https://buy.stripe.com/9B63cu8e6cs43QM0ueaZi07")!
 
     static var isConfigured: Bool {
         !tier5.absoluteString.contains("REPLACE")
