@@ -2,15 +2,16 @@ import Foundation
 
 /// Stripe Payment Link destinations for the donation tiers.
 ///
-/// Paste the real links from the Stripe dashboard (fixed $5/$10/$25 plus one
-/// "customer chooses price" link with a $2 minimum). While the slugs still
-/// say REPLACE, `isConfigured` is false and every donation entry point in the
-/// app (welcome line, panel button, auto-prompt) stays hidden.
+/// SANDBOX links (test mode, product prod_UopeycNCqjxNJr) — swap for live
+/// links once Stripe onboarding is complete, BEFORE any public release.
+/// Should the slugs ever say REPLACE again, `isConfigured` turns false and
+/// every donation entry point in the app (welcome line, panel button,
+/// auto-prompt) stays hidden.
 enum DonationLinks {
-    static let tier5 = URL(string: "https://buy.stripe.com/REPLACE_TIER_5")!
-    static let tier10 = URL(string: "https://buy.stripe.com/REPLACE_TIER_10")!
-    static let tier25 = URL(string: "https://buy.stripe.com/REPLACE_TIER_25")!
-    static let custom = URL(string: "https://buy.stripe.com/REPLACE_CUSTOM")!
+    static let tier5 = URL(string: "https://buy.stripe.com/test_4gM00i8c83JDfGR1ERaVa00")!
+    static let tier10 = URL(string: "https://buy.stripe.com/test_cNi4gyeAw1BveCN5V7aVa01")!
+    static let tier25 = URL(string: "https://buy.stripe.com/test_4gM9AS8c8dkd9it0ANaVa02")!
+    static let custom = URL(string: "https://buy.stripe.com/test_5kQ7sK3VSgwp7al4R3aVa03")!
 
     static var isConfigured: Bool {
         !tier5.absoluteString.contains("REPLACE")
