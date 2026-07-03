@@ -117,13 +117,26 @@ struct PanelView: View {
     // MARK: - Footer
 
     private var footer: some View {
-        Button { model.quit() } label: {
-            Text("Quit")
-                .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(spacing: 0) {
+            if model.donationAvailable {
+                Button { model.showDonation() } label: {
+                    Text(model.hasDonated ? "Thank you ♥ — Support again" : "Support ClaudeLights ♥")
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 12)
+                .padding(.top, 8)
+                .padding(.bottom, 4)
+            }
+            Button { model.quit() } label: {
+                Text("Quit")
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 12)
+            .padding(.top, model.donationAvailable ? 4 : 8)
+            .padding(.bottom, 8)
         }
-        .buttonStyle(.plain)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 8)
     }
 }
 

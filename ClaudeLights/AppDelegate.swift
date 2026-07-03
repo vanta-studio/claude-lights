@@ -21,6 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private lazy var model = AppModel(preferences: preferences)
     private lazy var demo = DemoSessionSimulator(statusURL: statusURL)
     private lazy var onboarding = OnboardingController(model: model)
+    private let donations = DonationController()
     private var controller: StatusController?
     private var watcher: FileWatcher?
     private var labelsWatcher: FileWatcher?
@@ -90,6 +91,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         model.runDemoHandler = { [weak self] in self?.demo.run() }
         model.showOnboardingHandler = { [weak self] in self?.onboarding.show() }
 
+        // Donations: entry points appear only once the Stripe links are real.
+        model.donationAvailable = DonationLinks.isConfigured
+        model.hasDonated = donations.hasDonated
+        model.showDonationHandler = { [weak self] in self?.donations.show() }
+        donations.onDonated = { [weak self] in self?.model.hasDonated = true }
+
         // Keep the installed helper in sync with the bundled one (app updates)
         // and detect the current wiring state.
         installer.ensureHelperCurrent()
@@ -133,6 +140,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             onboarding.show()
         } else {
             notifications.requestAuthorization()
+            // The donation ask waits for a launch where the user has already
+            // seen real value — never compete with onboarding.
+            donations.autoShowIfEligible()
         }
     }
 
@@ -189,6 +199,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Records history immediately and schedules a debounced notification/sound
     /// for each session that just changed state.
     private func handleTransitions(_ transitions: [SessionStatus]) {
+        donations.recordCompletions(transitions)
         for session in transitions {
             // History captures every transition immediately (not debounced),
             // under the same name the panel and notifications show.
