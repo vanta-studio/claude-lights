@@ -138,6 +138,16 @@ if CommandLine.arguments.count > 1 {
     check("live claude-path process detected", ProcessLiveness.isClaudeProcessAlive(pid: fakePid))
     check("process start date resolved", ProcessLiveness.claudeProcessStart(pid: fakePid) != nil)
 
+    // Auto-update scenario: the binary is DELETED while the process runs —
+    // proc_pidpath then fails with ENOENT, and exactly this pruned LIVE
+    // sessions in v1.1. Identity must survive via the kernel-recorded exec
+    // path. (All checks below now also exercise the fallback path.)
+    try! FileManager.default.removeItem(atPath: waiterPath)
+    check("deleted executable still identified as claude",
+          ProcessLiveness.isClaudeProcessAlive(pid: fakePid))
+    check("kernel-recorded exec path readable after deletion",
+          ProcessLiveness.executablePathFromArgs(pid: fakePid).map(ProcessLiveness.isClaudeLikePath) == true)
+
     func writeSession(_ fields: String) {
         try! "{\(fields)}".data(using: .utf8)!.write(to: statusURL)
     }

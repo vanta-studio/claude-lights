@@ -31,16 +31,42 @@ func statusFileURL() -> URL {
         .appendingPathComponent(".claude/claudelights-status.json")
 }
 
-/// Whether a pid's executable is the claude CLI. Matched by executable PATH
-/// (`proc_pidpath`), not the kernel comm: the official installer runs
-/// versioned binaries (`~/.local/share/claude/versions/2.1.199`), so comm is
-/// the version number while argv[0] merely displays "claude".
-/// Keep in sync with ProcessLiveness.isClaudeProcessAlive in the app.
+/// Does this executable path belong to the claude CLI? Path-based, not
+/// kernel comm: the official installer runs versioned binaries
+/// (`~/.local/share/claude/versions/2.1.199`), so comm is the version number
+/// while argv[0] merely displays "claude".
+func isClaudeLikePath(_ path: String) -> Bool {
+    (path as NSString).lastPathComponent == "claude" || path.contains("/claude/")
+}
+
+/// Executable path recorded by the kernel at exec time (KERN_PROCARGS2).
+/// Unlike `proc_pidpath`, this SURVIVES DELETION of the binary — Claude
+/// Code's auto-updater keeps only the newest versions on disk, so
+/// long-running sessions routinely execute from deleted files.
+func executablePathFromArgs(pid: pid_t) -> String? {
+    var mib: [Int32] = [CTL_KERN, KERN_PROCARGS2, pid]
+    var size = 0
+    guard sysctl(&mib, UInt32(mib.count), nil, &size, nil, 0) == 0, size > 4 else { return nil }
+    var buffer = [UInt8](repeating: 0, count: size)
+    guard sysctl(&mib, UInt32(mib.count), &buffer, &size, nil, 0) == 0, size > 4 else { return nil }
+    // Layout: int32 argc, exec_path C string, NUL padding, argv[0]…
+    let execBytes = buffer[4..<size]
+    guard let end = execBytes.firstIndex(of: 0), end > execBytes.startIndex else { return nil }
+    return String(decoding: execBytes[execBytes.startIndex..<end], as: UTF8.self)
+}
+
+/// Whether a pid's executable is the claude CLI.
+/// Keep in sync with ProcessLiveness in the app.
 func isClaudeExecutable(pid: pid_t) -> Bool {
     var buffer = [CChar](repeating: 0, count: 4096)
-    guard proc_pidpath(pid, &buffer, UInt32(buffer.count)) > 0 else { return false }
-    let path = String(cString: buffer)
-    return (path as NSString).lastPathComponent == "claude" || path.contains("/claude/")
+    if proc_pidpath(pid, &buffer, UInt32(buffer.count)) > 0 {
+        return isClaudeLikePath(String(cString: buffer))
+    }
+    // Deleted executable (auto-update): fall back to the kernel's copy.
+    if let path = executablePathFromArgs(pid: pid) {
+        return isClaudeLikePath(path)
+    }
+    return false
 }
 
 /// PID of the claude CLI process this hook belongs to: the nearest matching

@@ -55,18 +55,50 @@ enum ProcessLiveness {
     /// process (pid recycling, or a spoofed entry naming a foreign claude).
     static func claudeProcessStart(pid: pid_t) -> Date? {
         guard pid > 1 else { return nil }
-        var buffer = [CChar](repeating: 0, count: 4096)
-        guard proc_pidpath(pid, &buffer, UInt32(buffer.count)) > 0 else { return nil }
-        let path = String(cString: buffer)
-        guard (path as NSString).lastPathComponent == "claude" || path.contains("/claude/") else {
-            return nil
-        }
+        // Process must exist at all before any identity question.
         var mib: [Int32] = [CTL_KERN, KERN_PROC, KERN_PROC_PID, pid]
         var info = kinfo_proc()
         var size = MemoryLayout<kinfo_proc>.stride
-        guard sysctl(&mib, UInt32(mib.count), &info, &size, nil, 0) == 0, size > 0 else { return nil }
+        guard sysctl(&mib, UInt32(mib.count), &info, &size, nil, 0) == 0, size > 0,
+              info.kp_proc.p_pid == pid
+        else { return nil }
+
+        // Identity: prefer proc_pidpath; when the executable was DELETED
+        // (Claude Code's auto-updater keeps only the newest versions, so
+        // long-running sessions routinely execute from deleted files) fall
+        // back to the exec path the kernel recorded at spawn time. Only a
+        // POSITIVE mismatch counts as "not claude" — with no identity
+        // evidence at all, a live process is given the benefit of the doubt:
+        // pruning a live session is far worse than keeping a dead one until
+        // the stale-expiry net catches it.
+        var buffer = [CChar](repeating: 0, count: 4096)
+        if proc_pidpath(pid, &buffer, UInt32(buffer.count)) > 0 {
+            guard isClaudeLikePath(String(cString: buffer)) else { return nil }
+        } else if let recorded = executablePathFromArgs(pid: pid) {
+            guard isClaudeLikePath(recorded) else { return nil }
+        }
+
         let started = info.kp_proc.p_starttime
         return Date(timeIntervalSince1970: Double(started.tv_sec) + Double(started.tv_usec) / 1_000_000)
+    }
+
+    /// Path rule shared with the hook helper (keep in sync there).
+    static func isClaudeLikePath(_ path: String) -> Bool {
+        (path as NSString).lastPathComponent == "claude" || path.contains("/claude/")
+    }
+
+    /// Executable path recorded by the kernel at exec time (KERN_PROCARGS2);
+    /// survives deletion of the binary, unlike proc_pidpath.
+    static func executablePathFromArgs(pid: pid_t) -> String? {
+        var mib: [Int32] = [CTL_KERN, KERN_PROCARGS2, pid]
+        var size = 0
+        guard sysctl(&mib, UInt32(mib.count), nil, &size, nil, 0) == 0, size > 4 else { return nil }
+        var buffer = [UInt8](repeating: 0, count: size)
+        guard sysctl(&mib, UInt32(mib.count), &buffer, &size, nil, 0) == 0, size > 4 else { return nil }
+        // Layout: int32 argc, exec_path C string, NUL padding, argv[0]…
+        let execBytes = buffer[4..<size]
+        guard let end = execBytes.firstIndex(of: 0), end > execBytes.startIndex else { return nil }
+        return String(decoding: execBytes[execBytes.startIndex..<end], as: UTF8.self)
     }
 
     /// Convenience: is there a live claude process with this pid at all?
