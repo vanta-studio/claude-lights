@@ -66,10 +66,18 @@ final class HookInstaller: ObservableObject {
 
     private static let wirings: [Wiring] = [
         Wiring(event: "UserPromptSubmit", verb: "working", matcher: nil),
+        // A pending AskUserQuestion IS a question to the user, but which
+        // Notification (if any) it fires depends on the Claude Code version —
+        // keying off the tool call itself works on all of them. The answer
+        // triggers PostToolUse → resume like any other tool.
+        Wiring(event: "PreToolUse", verb: "needs_input", matcher: "AskUserQuestion"),
         Wiring(event: "PostToolUse", verb: "resume", matcher: nil),
         Wiring(event: "Stop", verb: "done", matcher: nil),
         Wiring(event: "PreCompact", verb: "compacting", matcher: nil),
-        Wiring(event: "Notification", verb: "needs_input", matcher: "idle_prompt|permission_prompt"),
+        // agent_needs_input: background-agent sessions (agents sidebar) that
+        // wait for input; elicitation_dialog: MCP servers asking the user.
+        Wiring(event: "Notification", verb: "needs_input",
+               matcher: "idle_prompt|permission_prompt|agent_needs_input|elicitation_dialog"),
         Wiring(event: "SessionEnd", verb: "remove", matcher: nil),
     ]
 

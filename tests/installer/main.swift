@@ -58,10 +58,15 @@ do {
     try installer.install()
     check("install -> installed", installer.status == .installed)
     let events = (json(sandbox.settings)["hooks"] as? [String: Any])?.keys.sorted() ?? []
-    check("all six events wired", events == ["Notification", "PostToolUse", "PreCompact", "SessionEnd", "Stop", "UserPromptSubmit"], "\(events)")
+    check("all seven events wired", events == ["Notification", "PostToolUse", "PreCompact", "PreToolUse", "SessionEnd", "Stop", "UserPromptSubmit"], "\(events)")
     check("helper copied", fm.isExecutableFile(atPath: sandbox.helperDir.appendingPathComponent("claudelights-hook").path))
     let notification = ((json(sandbox.settings)["hooks"] as? [String: Any])?["Notification"] as? [[String: Any]])?.first
-    check("notification matcher preserved", notification?["matcher"] as? String == "idle_prompt|permission_prompt")
+    check("notification matcher covers agent + MCP questions",
+          notification?["matcher"] as? String == "idle_prompt|permission_prompt|agent_needs_input|elicitation_dialog")
+    let preToolUse = ((json(sandbox.settings)["hooks"] as? [String: Any])?["PreToolUse"] as? [[String: Any]])?.first
+    check("PreToolUse scoped to AskUserQuestion", preToolUse?["matcher"] as? String == "AskUserQuestion")
+    let preToolUseCommand = ((preToolUse?["hooks"] as? [[String: Any]])?.first?["command"] as? String) ?? ""
+    check("PreToolUse fires needs_input", preToolUseCommand.contains("claudelights-hook' needs_input"))
 }
 
 // --- 2: idempotence -----------------------------------------------------------
@@ -260,6 +265,35 @@ do {
         if sh.terminationStatus != 0 { parseable = false }
     }
     check("apostrophe path shell-parseable", parseable, "\(cmds.first ?? "")")
+}
+
+// --- 13: v1.0/v1.1 wiring (six events, old matcher) is detected and upgraded ---
+do {
+    let sandbox = makeSandbox()
+    let helper = sandbox.helperDir.appendingPathComponent("claudelights-hook").path
+    func entry(_ verb: String, matcher: String? = nil) -> String {
+        let m = matcher.map { "\"matcher\": \"\($0)\", " } ?? ""
+        return "[{\(m)\"hooks\": [{\"type\": \"command\", \"command\": \"[ -x '\(helper)' ] && '\(helper)' \(verb) || true\"}]}]"
+    }
+    let old = """
+    {"hooks": {"UserPromptSubmit": \(entry("working")), "PostToolUse": \(entry("resume")),
+     "Stop": \(entry("done")), "PreCompact": \(entry("compacting")),
+     "Notification": \(entry("needs_input", matcher: "idle_prompt|permission_prompt")),
+     "SessionEnd": \(entry("remove"))}}
+    """
+    try old.data(using: .utf8)!.write(to: sandbox.settings)
+    let installer = makeInstaller(sandbox)
+    try installer.install()  // seed the helper binary at the expected path
+    try old.data(using: .utf8)!.write(to: sandbox.settings)  // then restore old wiring
+    installer.refreshStatus()
+    check("v1.1 wiring -> needsRepair(partialWiring)", installer.status == .needsRepair(.partialWiring))
+    try installer.install()
+    check("upgrade -> installed", installer.status == .installed)
+    let hooks = json(sandbox.settings)["hooks"] as? [String: Any] ?? [:]
+    let notificationGroups = hooks["Notification"] as? [[String: Any]] ?? []
+    check("old notification group replaced, not duplicated", notificationGroups.count == 1, "\(notificationGroups.count)")
+    check("upgraded matcher", notificationGroups.first?["matcher"] as? String == "idle_prompt|permission_prompt|agent_needs_input|elicitation_dialog")
+    check("PreToolUse added by upgrade", (hooks["PreToolUse"] as? [[String: Any]])?.first?["matcher"] as? String == "AskUserQuestion")
 }
 
 print(failures == 0 ? "\nAll installer fixture tests passed." : "\n\(failures) test(s) failed.")
