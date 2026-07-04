@@ -214,6 +214,12 @@ private struct SessionRow: View {
                 Text(isIdle ? LocalizedStringKey("Idle") : stateLabel)
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if let summary = session.backgroundTasksSummary {
+                    Text(verbatim: "⏳ \(summary)")
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
             }
 
             Spacer()

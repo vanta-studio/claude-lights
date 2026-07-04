@@ -45,7 +45,11 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
     func notify(session: SessionStatus, displayName: String? = nil) {
         let content = UNMutableNotificationContent()
         content.title = title(for: session.state)
-        content.body = displayName ?? session.displayName
+        var body = displayName ?? session.displayName
+        if let summary = session.backgroundTasksSummary {
+            body += " — " + summary
+        }
+        content.body = body
         content.userInfo = ["sessionId": session.sessionId]
         // Sound is handled separately (see playAttentionSound) so it can be
         // toggled independently of banners.

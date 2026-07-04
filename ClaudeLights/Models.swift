@@ -78,6 +78,10 @@ struct SessionStatus: Codable {
     /// PID of the session's claude CLI process, if the hook could identify
     /// it. Used for exact in-editor terminal focusing and pid-based liveness.
     let pid: Int?
+    /// Display descriptions of background tasks still running in the session
+    /// (written by the hook helper from the Stop payload's undocumented
+    /// `background_tasks` field). `nil` for older helpers/files.
+    let backgroundTasks: [String]?
 
     enum CodingKeys: String, CodingKey {
         case state
@@ -95,6 +99,7 @@ struct SessionStatus: Codable {
         case kittyWindowId = "kitty_window_id"
         case kittyListenOn = "kitty_listen_on"
         case pid
+        case backgroundTasks = "background_tasks"
     }
 
     /// The pid as a validated pid_t, or nil when the (world-writable) status
@@ -147,5 +152,18 @@ struct SessionStatus: Codable {
         if let activeSeconds { return activeSeconds }
         if let started { return max(0, timestamp.timeIntervalSince(started)) }
         return nil
+    }
+
+    /// One-line summary of still-running background tasks, shown while the
+    /// session waits (`needs_input`/`done`) so a waiting-but-busy session is
+    /// not mistaken for one blocked on the user. `nil` while working or
+    /// compacting — the session is visibly busy anyway — and when nothing runs.
+    var backgroundTasksSummary: String? {
+        guard state == .needsInput || state == .done else { return nil }
+        guard let backgroundTasks, let first = backgroundTasks.first else { return nil }
+        if backgroundTasks.count == 1 {
+            return String(localized: "1 task still running: \(first)")
+        }
+        return String(localized: "\(backgroundTasks.count) tasks still running: \(first), …")
     }
 }
