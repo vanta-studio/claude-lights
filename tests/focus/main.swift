@@ -26,7 +26,7 @@ func session(
         tty: tty, started: nil, activeSeconds: nil, timestamp: Date(),
         cwd: cwd, bundleId: bundleId, tmuxPane: tmuxPane,
         weztermPane: weztermPane, kittyWindowId: kittyWindowId,
-        kittyListenOn: kittyListenOn, pid: pid)
+        kittyListenOn: kittyListenOn, pid: pid, backgroundTasks: nil)
 }
 
 // --- FocusSupport.run ---------------------------------------------------------
