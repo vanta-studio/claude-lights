@@ -16,15 +16,20 @@ the tool than rent it.
 
 ## Behavior
 
-### 1. Welcome screen (soft seed)
-One caption-style line between the setup steps and the footer:
+### 1. Welcome screen (support card)
+*(Updated 2026-07-04: the original caption-style "soft seed" line was too
+easy to miss — the app lives on voluntary support, so the welcome screen
+now makes the ask visible.)*
 
-> ☕ ClaudeLights is free and made by one person. If it saves you time,
-> you can **support it**.
+A tinted card (pink fill + border) between the setup steps and the footer:
 
-"support it" is a link button that opens the donation window. No amount
-buttons in the welcome screen — first-run is too early for an ask; this only
-plants the seed.
+> ☕ **ClaudeLights is free and made by one person.**
+> It runs entirely on voluntary support — if it saves you time, consider
+> chipping in.
+> [ Support ClaudeLights ♥ ] *(full-width, borderedProminent, pink)*
+
+The button opens the donation window. Still no amount buttons in the
+welcome screen — the anchored tiers stay in the donation window.
 
 ### 2. Donation window (the real ask)
 A small window (~380 pt wide) that auto-opens **once at app launch after 25
