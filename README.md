@@ -64,8 +64,8 @@ Claude Code ──hook events──► claudelights-hook ──► ~/.claude/cla
 ```
 
 1. Claude Code fires [hooks](https://docs.anthropic.com/en/docs/claude-code/hooks)
-   (`UserPromptSubmit`, `PostToolUse`, `Stop`, `PreCompact`, `Notification`,
-   `SessionEnd`). Each runs `claudelights-hook`, a small compiled helper the
+   (`UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`, `PreCompact`,
+   `Notification`, `SessionEnd`). Each runs `claudelights-hook`, a small compiled helper the
    app installs to `~/Library/Application Support/ClaudeLights/` — no jq, no
    scripts, ~10 ms per event.
 2. The helper merges **only that session's entry** into the shared status

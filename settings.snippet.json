@@ -11,6 +11,17 @@
         ]
       }
     ],
+    "PreToolUse": [
+      {
+        "matcher": "AskUserQuestion",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x \"$HOME/Library/Application Support/ClaudeLights/claudelights-hook\" ] && \"$HOME/Library/Application Support/ClaudeLights/claudelights-hook\" needs_input || true"
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "hooks": [
@@ -43,7 +54,7 @@
     ],
     "Notification": [
       {
-        "matcher": "permission_prompt",
+        "matcher": "permission_prompt|agent_needs_input|elicitation_dialog",
         "hooks": [
           {
             "type": "command",
