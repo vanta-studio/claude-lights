@@ -61,7 +61,7 @@ do {
     check("all six events wired", events == ["Notification", "PostToolUse", "PreCompact", "SessionEnd", "Stop", "UserPromptSubmit"], "\(events)")
     check("helper copied", fm.isExecutableFile(atPath: sandbox.helperDir.appendingPathComponent("claudelights-hook").path))
     let notification = ((json(sandbox.settings)["hooks"] as? [String: Any])?["Notification"] as? [[String: Any]])?.first
-    check("notification matcher preserved", notification?["matcher"] as? String == "idle_prompt|permission_prompt")
+    check("notification matcher preserved", notification?["matcher"] as? String == "permission_prompt")
 }
 
 // --- 2: idempotence -----------------------------------------------------------
@@ -172,6 +172,30 @@ do {
     installer.ensureHelperCurrent()
     installer.refreshStatus()
     check("ensureHelperCurrent heals", installer.status == .installed)
+}
+
+// --- pre-1.3 matcher (idle_prompt) is detected as outdated and repaired --------
+do {
+    let sandbox = makeSandbox()
+    let installer = makeInstaller(sandbox)
+    try installer.install()
+    // Rewrite the Notification matcher to the old value, as a 1.0-1.2
+    // install would have left it.
+    var settings = json(sandbox.settings)
+    var hooks = settings["hooks"] as! [String: Any]
+    var groups = hooks["Notification"] as! [[String: Any]]
+    groups[0]["matcher"] = "idle_prompt|permission_prompt"
+    hooks["Notification"] = groups
+    settings["hooks"] = hooks
+    try JSONSerialization.data(withJSONObject: settings, options: [.prettyPrinted, .sortedKeys])
+        .write(to: sandbox.settings)
+    installer.refreshStatus()
+    check("old idle_prompt matcher -> needsRepair", installer.status == .needsRepair(.outdatedWiring))
+    try installer.install()
+    check("repair updates the matcher", installer.status == .installed)
+    let notification = ((json(sandbox.settings)["hooks"] as? [String: Any])?["Notification"] as? [[String: Any]])?.first
+    check("matcher is permission_prompt after repair",
+          notification?["matcher"] as? String == "permission_prompt")
 }
 
 // --- 8: backups created and pruned to 3 -------------------------------------------

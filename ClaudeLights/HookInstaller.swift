@@ -11,6 +11,9 @@ enum HookInstallStatus: Equatable {
         case helperOutdated
         /// Some of our hook events are wired, but not all of them.
         case partialWiring
+        /// Wired, but with settings from an older version (e.g. the
+        /// pre-1.3 Notification matcher that turned idle sessions red).
+        case outdatedWiring
         /// Our entries point somewhere other than the expected helper path
         /// (e.g. a previous install location).
         case wrongPath
@@ -69,7 +72,10 @@ final class HookInstaller: ObservableObject {
         Wiring(event: "PostToolUse", verb: "resume", matcher: nil),
         Wiring(event: "Stop", verb: "done", matcher: nil),
         Wiring(event: "PreCompact", verb: "compacting", matcher: nil),
-        Wiring(event: "Notification", verb: "needs_input", matcher: "idle_prompt|permission_prompt"),
+        // Deliberately NOT idle_prompt: Claude Code's "session sits idle"
+        // nudge fires ~1 min after a turn completes — a finished session
+        // must not go red when nothing actually blocks.
+        Wiring(event: "Notification", verb: "needs_input", matcher: "permission_prompt"),
         Wiring(event: "SessionEnd", verb: "remove", matcher: nil),
     ]
 
@@ -162,6 +168,7 @@ final class HookInstaller: ObservableObject {
 
         var ourCommands: [String] = []
         var wiredEvents: Set<String> = []
+        var ourMatchers: [String: String?] = [:]
         var hasLegacy = false
         let hooks = settings["hooks"] as? [String: Any] ?? [:]
         for (event, value) in hooks {
@@ -171,6 +178,7 @@ final class HookInstaller: ObservableObject {
                     if isOurCommand(command) {
                         ourCommands.append(command)
                         wiredEvents.insert(event)
+                        ourMatchers[event] = group["matcher"] as? String
                     } else if isLegacyCommand(command) {
                         hasLegacy = true
                     }
@@ -194,6 +202,11 @@ final class HookInstaller: ObservableObject {
         }
         if wiredEvents != Set(Self.wirings.map(\.event)) {
             return .needsRepair(.partialWiring)
+        }
+        // Wiring from an older version (e.g. the pre-1.3 Notification
+        // matcher that turned idle sessions red): repairable in one click.
+        for wiring in Self.wirings where ourMatchers[wiring.event] ?? nil != wiring.matcher {
+            return .needsRepair(.outdatedWiring)
         }
         guard fileManager.fileExists(atPath: installedHelperURL.path) else {
             return .needsRepair(.helperMissing)
