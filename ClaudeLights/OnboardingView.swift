@@ -15,8 +15,7 @@ struct OnboardingView: View {
             installStep
             notificationStep
             demoStep
-            Divider()
-            supportLine
+            supportCard
             footer
         }
         .padding(24)
@@ -148,20 +147,38 @@ struct OnboardingView: View {
         }
     }
 
-    /// Soft donation seed: first-run is too early for a real ask, so this only
-    /// plants the thought — the anchored amounts live in the donation window.
+    /// The app is donationware — this card is the visible ask. The anchored
+    /// amounts still live in the donation window it opens.
     @ViewBuilder
-    private var supportLine: some View {
+    private var supportCard: some View {
         if model.donationAvailable {
-            HStack(spacing: 4) {
-                Text("☕ Free and made by one person. If it saves you time, you can")
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 8) {
+                    Text("☕").font(.title3)
+                    Text("ClaudeLights is free and made by one person.")
+                        .font(.callout.weight(.semibold))
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Text("It runs entirely on voluntary support — if it saves you time, consider chipping in.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 Button { model.showDonation() } label: {
-                    Text("support it").font(.caption)
+                    Text("Support ClaudeLights ♥")
+                        .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.link)
+                .buttonStyle(.borderedProminent)
+                .tint(.pink)
             }
+            .padding(12)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.pink.opacity(0.08))
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .strokeBorder(Color.pink.opacity(0.25))
+            )
         }
     }
 
